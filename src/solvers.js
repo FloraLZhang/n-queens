@@ -121,8 +121,30 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0; //fixme
+  var solution = new Board({n: n});
+  var findSolutions = function (rowIndex) {
+    if (rowIndex === n) {
+      solutionCount++;
+      return;
+    }
 
+    for (var col = 0; col < n; col++) {
+      //Place a rook at parameters
+      solution.togglePiece(rowIndex, col);
+
+      //check to see if there's a conflict, if no conflict
+      if (!solution.hasAnyQueensConflicts()) {
+        //new rowIndex = row + 1
+        //new colIndex = i
+        //recursive case on next square(when we have no conflict with placed piece)
+        findSolutions(rowIndex + 1);
+      }
+      //Backtrack - retoggle to nothing
+      solution.togglePiece(rowIndex, col);
+    }
+  };
+  findSolutions(0);
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
